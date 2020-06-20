@@ -49,3 +49,17 @@
     dest: /etc/apache2/sites-enabled/default-ssl.conf
     state: link
   notify: restart apache2
+
+- name: Create a directory if it does not exist
+  file:
+    path: "{{ maven_dir }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+
+
+- name: add settings.xml
+  template:
+    src: settings.xml.j2
+    dest: "{{ maven_dir }}/settings.xml"

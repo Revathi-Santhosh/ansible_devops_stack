@@ -1,5 +1,8 @@
 dependencies:
-  - role: certbot
+  - {
+    role: certbot,
+    certs: "{{ jenkins_certs }}"
+    }
   - role: java
   - role: apache2
   # List your role dependencies here, one per line. Be sure to remove the '[]' above,
