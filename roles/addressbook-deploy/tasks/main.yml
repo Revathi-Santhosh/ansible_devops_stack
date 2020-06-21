@@ -1,0 +1,77 @@
+---
+- name: Downlaod package from nexus to tmp
+  uri:
+    url: "https://{{ nexus_url }}/repository/maven-releases/com/frontend/addressbook/addressbook/{{ version }}/addressbook-{{ version }}.war"
+    user: admin
+    password: 'admin@123'
+    dest: /opt/addressbook-prepoddeploy
+    remote_src: yes
+    method: GET
+    force_basic_auth: yes
+    status_code:
+      - 200
+      - 304
+    owner: tomcat
+    group: tomcat
+
+#
+#
+- name: Stop tomcat Service
+  service:
+    name: tomcat
+    state: stopped
+
+
+- name: create link file for deployment
+  file:
+    src: /opt/addressbook-prepoddeploy/addressbook-{{ version }}.war
+    dest: /opt/tomcat/webapps/addressbook.war
+    owner: tomcat
+    group: tomcat
+    mode: '0644'
+    state: link
+    remote_src: yes
+#
+#
+- name: Restart service
+  service:
+    name: tomcat
+    state: restarted
+
+
+
+
+# stage("Deploy") {
+#              steps {
+#               script {
+#                 withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'nexus_username', passwordVariable: 'nexus_password')]) {
+#                    sshagent (credentials : ['addressbook-preprod']) {
+#                    sh """
+#                    wget --user ${nexus_username} --password ${nexus_password} https://${nexus_url}/repository/maven-releases/com/frontend/addressbook/addressbook/${version}/addressbook-${version}.war
+#
+#                   scp addressbook-${version}.war ubuntu@${addressbook_ser}:/tmp
+#                   ssh ubuntu@${addressbook_ser} \
+#                   sudo cp /tmp/addressbook-${version}.war /opt/addressbook-prepoddeploy
+#
+#                   ssh ubuntu@${addressbook_ser} \
+#                   sudo chgrp -R tomcat /opt/addressbook-prepoddeploy/addressbook-${version}.war
+#
+#                   ssh ubuntu@${addressbook_ser} \
+#                   sudo service tomcat stop
+#
+#                   ssh ubuntu@${addressbook_ser} \
+#                   sudo rm -rf /opt/tomcat/webapps/addressbook.war
+#
+#                   ssh ubuntu@${addressbook_ser} \
+#                   sudo ln -s /opt/addressbook-prepoddeploy/addressbook-${version}.war /opt/tomcat/webapps/addressbook.war
+#
+#                   ssh ubuntu@${addressbook_ser} \
+#                   sudo service tomcat restart
+#                     """
+#                 }
+#                 }
+#              }
+#              }
+#           }
+#         }
+#       }
