@@ -1,4 +1,11 @@
 
+- name: Create predeploy folder
+  file:
+    state: directory
+    path: "{{ predeploy_folder }}"
+    owner: tomcat
+    group: tomcat
+
 - name: copy http config of addressbook
   template:
     src: 000-default.conf.j2
