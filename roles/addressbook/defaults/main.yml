@@ -1,0 +1,4 @@
+---
+# defaults file for addressbook
+addressbook_domain: ""
+addressbook_certs: ""

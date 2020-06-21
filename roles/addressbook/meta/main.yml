@@ -1,0 +1,11 @@
+
+ dependencies:
+   - {
+      role: certbot,
+      certs: "{{ addressbook_certs }}"
+      }
+   - role: tomcat8
+   - {
+      role: certbot,
+      certs: "{{ addressbook_certs }}"
+      }

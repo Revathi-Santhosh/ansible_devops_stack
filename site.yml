@@ -3,7 +3,17 @@
 #   become: true
 #   roles:
 #     - jenkins
+- hosts: jenkins_server
+  become: true
+  roles:
+    - jenkins
+
 - hosts: nexus_server
   become: true
   roles:
     - nexus
+
+- hosts: addressbook_server
+  become: true
+  roles:
+    - addressbook
